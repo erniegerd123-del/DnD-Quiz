@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D&D Charakterfindung</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f8f7f4;--sur:#fff;--sur2:#f1efe9;--bor:rgba(0,0,0,0.1);--bor2:rgba(0,0,0,0.2);--txt:#1a1a1a;--txt2:#5a5a5a;--txt3:#999;--bbg:#eaf2fc;--bbd:#4a90d9;--btx:#1a5a9a;--grn:#1a6a3a;--red:#8b1a1a;--r:12px;--rs:8px}
+@media(prefers-color-scheme:dark){:root{--bg:#1a1a1a;--sur:#242424;--sur2:#2e2e2e;--bor:rgba(255,255,255,0.1);--bor2:rgba(255,255,255,0.2);--txt:#f0f0f0;--txt2:#aaa;--txt3:#666;--bbg:#1a2d40;--bbd:#4a90d9;--btx:#7ab8f0;--grn:#6abf8a;--red:#f07a7a}}
+body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--txt);min-height:100vh;padding:24px 16px 48px}
+#app{max-width:640px;margin:0 auto}
+.hdr{text-align:center;margin-bottom:28px}
+.bdg{display:inline-block;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt3);margin-bottom:10px}
+.hdr h1{font-size:24px;font-weight:600;margin-bottom:6px}
+.hdr p{font-size:14px;color:var(--txt2);line-height:1.5}
+.pw{background:var(--sur2);border-radius:99px;height:4px;margin:0 0 24px;overflow:hidden}
+.pf{height:100%;background:#4a90d9;border-radius:99px;transition:width .35s ease}
+.card{background:var(--sur);border:.5px solid var(--bor);border-radius:var(--r);padding:20px;margin-bottom:16px}
+.qm{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--txt3);margin-bottom:8px}
+.qt{font-size:17px;font-weight:500;line-height:1.45;margin-bottom:18px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{background:var(--sur2);border:.5px solid var(--bor);border-radius:var(--rs);padding:12px 14px;text-align:left;cursor:pointer;font-size:14px;color:var(--txt);line-height:1.45;display:flex;gap:10px;align-items:flex-start;transition:border-color .15s,background .15s;width:100%;font-family:inherit}
+.opt:hover{border-color:var(--bor2);background:var(--sur)}
+.opt.sel{border-color:var(--bbd);background:var(--bbg)}
+.ol{font-size:11px;font-weight:600;color:var(--txt3);min-width:16px;padding-top:1px;flex-shrink:0}
+.opt.sel .ol{color:var(--btx)}
+.nav{display:flex;justify-content:space-between;align-items:center}
+.btn{border-radius:var(--rs);padding:10px 20px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;transition:opacity .15s,background .15s}
+.bg{background:transparent;border:.5px solid var(--bor2);color:var(--txt2)}
+.bg:hover{background:var(--sur2)}
+.bg:disabled{opacity:.3;cursor:default}
+.bs{background:var(--txt);color:var(--bg);border:none}
+.bs:hover{opacity:.85}
+.bs:disabled{opacity:.3;cursor:default}
+.qc{font-size:13px;color:var(--txt3)}
+.sl{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--txt3);margin-bottom:8px}
+.div{border:none;border-top:.5px solid var(--bor);margin:16px 0}
+.rh{text-align:center;padding:8px 0 20px}
+.ri{font-size:52px;margin-bottom:10px;line-height:1}
+.rn{font-size:26px;font-weight:600;margin-bottom:4px}
+.rs{font-size:14px;color:var(--txt2)}
+.rd{font-size:14px;color:var(--txt2);line-height:1.65}
+.rg{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+@media(max-width:480px){.rg{grid-template-columns:repeat(3,1fr)}}
+.rb{background:var(--sur2);border-radius:var(--rs);padding:8px;text-align:center}
+.ric{font-size:18px;margin-bottom:3px}
+.rnm{font-size:11px;font-weight:600;margin-bottom:2px}
+.rvl{font-size:11px;color:var(--txt3);margin-top:3px}
+.rbw{height:4px;background:var(--bor);border-radius:99px;margin-top:4px;overflow:hidden}
+.rbf{height:100%;border-radius:99px}
+.cxr{display:flex;gap:4px}
+.cxp{width:22px;height:6px;border-radius:99px;background:var(--bor)}
+.cxp.on{background:#4a90d9}
+.swg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:420px){.swg{grid-template-columns:1fr}}
+.swb{background:var(--sur2);border-radius:var(--rs);padding:12px}
+.swl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.swb.str .swl{color:var(--grn)}
+.swb.wk .swl{color:var(--red)}
+.swb p{font-size:13px;color:var(--txt2);line-height:1.5}
+.psb{background:var(--sur2);border-radius:var(--rs);padding:12px 14px}
+.psi{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;font-size:13px;color:var(--txt2);line-height:1.5}
+.psi:last-child{margin-bottom:0}
+.psd{width:6px;height:6px;border-radius:50%;background:#4a90d9;margin-top:5px;flex-shrink:0}
+.sbi{background:var(--sur2);border-radius:var(--rs);padding:12px 14px;margin-bottom:8px;border:.5px solid var(--bor)}
+.sbi.top{border-color:var(--bbd);background:var(--bbg)}
+.sbh{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.sbn{font-size:14px;font-weight:500;color:var(--txt)}
+.sbsrc{font-size:11px;color:var(--txt3)}
+.sbbdg{font-size:10px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--bbd);color:#fff}
+.sbrl{font-size:11px;color:var(--txt3);margin-left:auto}
+.sbbw{height:3px;background:var(--bor);border-radius:99px;margin:6px 0;overflow:hidden}
+.sbbar{height:100%;border-radius:99px;background:#4a90d9}
+.sbd{font-size:13px;color:var(--txt2);line-height:1.5}
+.ib{background:var(--sur2);border-radius:var(--rs);padding:12px 14px;margin-bottom:8px}
+.it{font-size:14px;font-weight:500;margin-bottom:3px}
+.ir{font-size:13px;color:var(--txt2);line-height:1.5}
+.tgr{display:flex;flex-wrap:wrap;gap:6px}
+.tg{font-size:12px;padding:3px 10px;border-radius:99px;border:.5px solid var(--bor2);color:var(--txt2);background:var(--sur2)}
+.scr{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.scl{font-size:13px;color:var(--txt2);min-width:105px}
+.sct{flex:1;height:6px;background:var(--sur2);border-radius:99px;overflow:hidden}
+.scb{height:100%;border-radius:99px;transition:width .7s ease}
+.scv{font-size:12px;color:var(--txt3);min-width:20px;text-align:right}
+.altb{background:var(--sur2);border-radius:var(--rs);padding:12px 14px}
+.alti{font-size:13px;color:var(--txt2);margin-bottom:5px;line-height:1.5}
+.alti:last-child{margin-bottom:0}
+.rstb{width:100%;padding:12px;background:transparent;border:.5px solid var(--bor2);border-radius:var(--rs);font-size:14px;color:var(--txt2);cursor:pointer;font-family:inherit;transition:background .15s;margin-top:8px}
+.rstb:hover{background:var(--sur2)}
+.fn{text-align:center;font-size:12px;color:var(--txt3);margin-top:24px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+var Q=[
+{id:1,cat:"Kampfrolle",text:"Was ist dein liebster Moment in einem Kampf?",opts:[
+{l:"A",text:"Ich stehe vorne, halte Schlaege ab und schuetze meine Verbuendeten",tags:["fighter","paladin","barbarian"],stags:["fighter_cavalier","fighter_champion","paladin_devotion","barbarian_totem"]},
+{l:"B",text:"Ich mache in einem einzigen Treffer massiven Schaden und verschwinde wieder",tags:["rogue","ranger"],stags:["rogue_assassin","rogue_thief","ranger_gloom"]},
+{l:"C",text:"Ich kontrolliere das Schlachtfeld - Gegner koennen nicht machen was sie wollen",tags:["wizard","sorcerer","druid"],stags:["wizard_divination","wizard_evocation","sorcerer_draconic","druid_land"]},
+{l:"D",text:"Ich halte meine Verbuendeten am Leben und verstaerke sie",tags:["cleric","bard","druid","paladin"],stags:["cleric_life","cleric_grave","bard_lore","druid_dreams","paladin_glory"]},
+{l:"E",text:"Ich schiesse aus der Distanz und deal konstanten zuverlaessigen Schaden",tags:["ranger","warlock","fighter"],stags:["ranger_hunter","warlock_fiend","warlock_goo","fighter_champion"]}
+]},
+{id:2,cat:"Kampfrolle",text:"Wie gehst du mit mehreren Gegnern gleichzeitig um?",opts:[
+{l:"A",text:"Ich stelle mich dazwischen und nehme den Schaden fuer die Gruppe",tags:["fighter","barbarian","paladin"],stags:["fighter_cavalier","barbarian_totem","paladin_devotion","paladin_ancients"]},
+{l:"B",text:"Ich zaubere etwas das alle gleichzeitig trifft oder einschraenkt",tags:["wizard","sorcerer","druid","cleric"],stags:["wizard_evocation","sorcerer_draconic","sorcerer_storm","druid_land","cleric_light"]},
+{l:"C",text:"Ich fokussiere den gefaehrlichsten zuerst und eliminiere ihn schnell",tags:["rogue","ranger","warlock"],stags:["rogue_assassin","ranger_gloom","ranger_monster","warlock_fiend","warlock_hexblade"]},
+{l:"D",text:"Ich buff meine Verbuendeten damit sie effizienter kaempfen",tags:["bard","cleric","paladin"],stags:["bard_lore","bard_glamour","cleric_war","paladin_glory"]},
+{l:"E",text:"Ich nutze Umgebung und Reichweite um alle auf Abstand zu halten",tags:["ranger","fighter","monk"],stags:["ranger_hunter","fighter_battlemaster","monk_openhand","monk_kensei"]}
+]},
+{id:3,cat:"Kampfrolle",text:"Was soll dein Charakter nach einem langen Kampftag noch leisten?",opts:[
+{l:"A",text:"Genauso kaempfen wie am Anfang - ich brauche keine Ressourcen",tags:["fighter","barbarian","monk"],stags:["fighter_champion","fighter_battlemaster","barbarian_berserker","monk_openhand"]},
+{l:"B",text:"Noch ein paar impactvolle Tricks in der Hinterhand haben",tags:["paladin","ranger","warlock"],stags:["paladin_vengeance","ranger_gloom","warlock_fiend","warlock_goo"]},
+{l:"C",text:"Ich bin nach 2-3 Kaempfen leer - dafuer bin ich in diesen Kaempfen unschlagbar",tags:["wizard","sorcerer","druid"],stags:["wizard_divination","sorcerer_draconic","sorcerer_shadow","druid_moon"]},
+{l:"D",text:"Ich regeneriere bei kurzen Pausen schnell und bin sofort wieder bereit",tags:["warlock","monk","fighter"],stags:["warlock_fiend","warlock_goo","warlock_hexblade","warlock_celestial","monk_shadow","fighter_eldritchknight"]}
+]},
+{id:4,cat:"Spielstil",text:"Wie willst du Probleme ausserhalb des Kampfes loesen?",opts:[
+{l:"A",text:"Mit Gewalt oder Einschuechterung - direkt und ohne Umweg",tags:["barbarian","fighter","paladin"],stags:["barbarian_zealot","barbarian_totem","fighter_champion","paladin_vengeance"]},
+{l:"B",text:"Mit Cleverness, Fallen und vorbereitetem Plan",tags:["rogue","wizard","ranger","artificer"],stags:["rogue_arcane","rogue_inquisitive","wizard_divination","ranger_hunter","artificer_battlesmith"]},
+{l:"C",text:"Mit Charme, Ueberredung und sozialer Manipulation",tags:["bard","warlock","sorcerer"],stags:["bard_lore","bard_whispers","warlock_archfey","warlock_goo","sorcerer_divine"]},
+{l:"D",text:"Mit Magie und uebernatuerlichen Faehigkeiten",tags:["wizard","sorcerer","warlock","cleric"],stags:["wizard_evocation","wizard_conjuration","sorcerer_wild","warlock_fiend","cleric_knowledge"]},
+{l:"E",text:"Mit Naturverbundenheit, Tieren oder uraltem Wissen",tags:["druid","ranger"],stags:["druid_land","druid_shepherd","ranger_beast","ranger_horizon"]}
+]},
+{id:5,cat:"Spielstil",text:"Wie wichtig ist dir Mobilitaet im Kampf?",opts:[
+{l:"A",text:"Sehr wichtig - ich will mich frei bewegen, ausweichen, ueberall sein",tags:["monk","rogue","ranger"],stags:["monk_shadow","monk_drunken","rogue_thief","rogue_scout","ranger_gloom"]},
+{l:"B",text:"Mittel - ich bewege mich wenn noetig aber stehe lieber solide fest",tags:["fighter","paladin","cleric"],stags:["fighter_battlemaster","fighter_cavalier","paladin_devotion","cleric_war"]},
+{l:"C",text:"Unwichtig - ich stehe hinten und zaubere von dort",tags:["wizard","sorcerer","warlock"],stags:["wizard_evocation","sorcerer_draconic","warlock_goo","warlock_fiend"]},
+{l:"D",text:"Ich will der Fels sein den niemand umwirft",tags:["barbarian","fighter"],stags:["barbarian_totem","barbarian_ancestral","fighter_cavalier","fighter_champion"]}
+]},
+{id:6,cat:"Persoenlichkeit",text:"Woher kommt die Kraft deines Charakters?",opts:[
+{l:"A",text:"Jahrelange Ausbildung und Disziplin - ich habe alles erarbeitet",tags:["fighter","monk","ranger","rogue"],stags:["fighter_battlemaster","fighter_samurai","monk_openhand","monk_kensei","ranger_hunter","rogue_thief"]},
+{l:"B",text:"Goettlicher Auftrag oder tiefer Glaube - ich bin berufen",tags:["cleric","paladin"],stags:["cleric_life","cleric_light","cleric_war","paladin_devotion","paladin_glory"]},
+{l:"C",text:"Ein dunkler Pakt mit einer kosmischen oder teuflischen Macht",tags:["warlock"],stags:["warlock_fiend","warlock_goo","warlock_archfey","warlock_hexblade","warlock_celestial"]},
+{l:"D",text:"Angeborenes Talent oder magisches Blut",tags:["sorcerer","bard"],stags:["sorcerer_draconic","sorcerer_wild","sorcerer_divine","bard_lore","bard_swords"]},
+{l:"E",text:"Wissen, Forschung und Studium - Magie ist eine Wissenschaft",tags:["wizard","artificer"],stags:["wizard_divination","wizard_evocation","wizard_conjuration","wizard_abjuration","artificer_artillerist","artificer_battlesmith"]},
+{l:"F",text:"Die Natur selbst hat mir ihre Kraft verliehen",tags:["druid","ranger"],stags:["druid_land","druid_moon","druid_shepherd","ranger_beast","ranger_horizon"]}
+]},
+{id:7,cat:"Persoenlichkeit",text:"Was motiviert deinen Charakter am staerksten?",opts:[
+{l:"A",text:"Ehre, Pflicht und einen Eid einhalten",tags:["paladin","cleric","fighter"],stags:["paladin_devotion","paladin_ancients","cleric_life","cleric_war","fighter_samurai"]},
+{l:"B",text:"Persoenliche Macht - staerker werden um jeden Preis",tags:["warlock","barbarian","sorcerer"],stags:["warlock_fiend","warlock_goo","warlock_hexblade","barbarian_berserker","sorcerer_shadow"]},
+{l:"C",text:"Andere schuetzen - die Gruppe geht immer vor mir",tags:["cleric","druid","paladin","bard"],stags:["cleric_life","cleric_grave","druid_dreams","paladin_devotion","paladin_glory","bard_lore","bard_glamour"]},
+{l:"D",text:"Wahrheit und Wissen - Geheimnisse aufdecken",tags:["wizard","ranger","druid"],stags:["wizard_divination","wizard_conjuration","ranger_horizon","druid_land","warlock_goo"]},
+{l:"E",text:"Freiheit, Abenteuer und persoenliche Bereicherung",tags:["rogue","bard","ranger"],stags:["rogue_thief","rogue_swashbuckler","bard_lore","bard_swords","ranger_hunter"]},
+{l:"F",text:"Balance und natuerliche Ordnung bewahren",tags:["druid","monk","paladin"],stags:["druid_land","druid_shepherd","monk_openhand","paladin_ancients","ranger_monster"]}
+]},
+{id:8,cat:"Persoenlichkeit",text:"Wie verhaelt sich dein Charakter wenn die Gruppe in Lebensgefahr ist?",opts:[
+{l:"A",text:"Ich stelle mich vor die anderen - mein Leben zuerst",tags:["paladin","fighter","barbarian"],stags:["paladin_devotion","paladin_ancients","fighter_cavalier","barbarian_totem","barbarian_ancestral"]},
+{l:"B",text:"Ich eliminiere die Bedrohung so schnell wie moeglich",tags:["rogue","ranger","warlock","sorcerer"],stags:["rogue_assassin","ranger_gloom","warlock_fiend","sorcerer_draconic","sorcerer_shadow"]},
+{l:"C",text:"Ich heile und staerke die anderen damit wir gemeinsam ueberleben",tags:["cleric","bard","druid"],stags:["cleric_life","cleric_grave","bard_lore","bard_glamour","druid_dreams","warlock_celestial"]},
+{l:"D",text:"Ich analysiere die Situation und finde den kluegstem Ausweg",tags:["wizard","rogue","artificer"],stags:["wizard_divination","rogue_inquisitive","rogue_arcane","artificer_battlesmith","artificer_armorer"]}
+]},
+{id:9,cat:"Atmosphaere",text:"Welche dieser Beschreibungen klingt am coolsten?",opts:[
+{l:"A",text:"Ein gepanzerter Krieger der einen Drachen niederringt waehrend Verbuendete hinter ihm sicher sind",tags:["fighter","paladin","barbarian"],stags:["fighter_champion","fighter_cavalier","paladin_devotion","barbarian_totem"]},
+{l:"B",text:"Ein Assassine der lautlos aus dem Dunkel tritt, einen toedlichen Schlag setzt und verschwindet",tags:["rogue","monk"],stags:["rogue_assassin","monk_shadow"]},
+{l:"C",text:"Ein Magier der mit einem einzigen Wort eine ganze Armee einfriert",tags:["wizard","sorcerer"],stags:["wizard_evocation","wizard_divination","sorcerer_draconic","sorcerer_storm"]},
+{l:"D",text:"Ein Waldlaeufer der seinen Feind durch finstere Waelder hetzt ohne je gesehen zu werden",tags:["ranger"],stags:["ranger_gloom","ranger_hunter","ranger_monster"]},
+{l:"E",text:"Ein Kleriker der einen Gefallenen zurueckbringt und das Boese mit goettlichem Licht verbrennt",tags:["cleric","paladin"],stags:["cleric_life","cleric_light","paladin_devotion","paladin_vengeance"]},
+{l:"F",text:"Ein Hexenmeister der kosmische Kraefte kanalisiert die kein Sterblicher verstehen sollte",tags:["warlock"],stags:["warlock_goo","warlock_fiend","warlock_archfey","warlock_hexblade"]},
+{l:"G",text:"Ein Barde der mit Worten Armeen bewegt und Feinde mit blossser Musik bezwingt",tags:["bard"],stags:["bard_lore","bard_glamour","bard_whispers"]}
+]},
+{id:10,cat:"Atmosphaere",text:"Welche Atmosphaere magst du beim Roleplaying?",opts:[
+{l:"A",text:"Heroisch - epische Momente, klare Helden, grosse Gesten",tags:["paladin","fighter","cleric"],stags:["paladin_devotion","paladin_glory","fighter_samurai","cleric_light","cleric_war"]},
+{l:"B",text:"Duester und moralisch komplex - keine einfachen Antworten",tags:["warlock","rogue","ranger"],stags:["warlock_goo","warlock_fiend","rogue_assassin","rogue_scout","ranger_gloom","sorcerer_shadow"]},
+{l:"C",text:"Geheimnisvoll - Raetsel, verborgenes Wissen, uralte kosmische Maeche",tags:["wizard","druid","warlock"],stags:["wizard_divination","druid_land","warlock_goo","warlock_archfey","sorcerer_shadow"]},
+{l:"D",text:"Sozial und charaktergetrieben - Beziehungen, Humor, Emotionen",tags:["bard","sorcerer","rogue"],stags:["bard_lore","bard_glamour","sorcerer_divine","rogue_swashbuckler","warlock_archfey"]},
+{l:"E",text:"Spirituell - Glaube, innere Staerke, hoeherer Zweck",tags:["cleric","paladin","monk","druid"],stags:["cleric_life","paladin_devotion","paladin_ancients","monk_openhand","druid_land"]}
+]},
+{id:11,cat:"Magie",text:"Wie stehst du zu Magie?",opts:[
+{l:"A",text:"Ich will pure maechtige Magie - riesige Zauberliste, volle Kontrolle",tags:["wizard","sorcerer"],stags:["wizard_evocation","wizard_divination","sorcerer_draconic","sorcerer_storm"]},
+{l:"B",text:"Magie als Ergaenzung - ein paar Tricks neben koerperlichen Faehigkeiten",tags:["ranger","paladin","bard","artificer"],stags:["ranger_gloom","paladin_vengeance","bard_valor","artificer_artillerist","fighter_eldritchknight"]},
+{l:"C",text:"Gar keine Magie - ich vertraue auf Stahl, Muskeln und Koennen",tags:["fighter","barbarian","rogue","monk"],stags:["fighter_champion","fighter_battlemaster","barbarian_berserker","rogue_thief","rogue_scout","monk_kensei"]},
+{l:"D",text:"Goettliche oder natuerliche Magie - Kraft durch Glauben oder die Natur",tags:["cleric","paladin","druid"],stags:["cleric_life","cleric_light","paladin_devotion","druid_land","druid_moon"]},
+{l:"E",text:"Dunkle oder verbotene Magie - Macht die andere fuerchten",tags:["warlock","sorcerer"],stags:["warlock_fiend","warlock_goo","warlock_hexblade","sorcerer_shadow","sorcerer_wild"]}
+]},
+{id:12,cat:"Magie",text:"Wenn du Magie einsetzt - was soll sie hauptsaechlich bewirken?",opts:[
+{l:"A",text:"Massiven Schaden auf viele Gegner gleichzeitig",tags:["wizard","sorcerer","druid"],stags:["wizard_evocation","sorcerer_draconic","sorcerer_storm","druid_land","cleric_light"]},
+{l:"B",text:"Gegner kontrollieren, verlangsamen oder ausser Gefecht setzen",tags:["wizard","sorcerer","druid","bard"],stags:["wizard_divination","sorcerer_draconic","druid_land","bard_lore","warlock_archfey"]},
+{l:"C",text:"Verbuendete heilen, staerken und schuetzen",tags:["cleric","bard","druid","paladin"],stags:["cleric_life","cleric_grave","bard_lore","bard_glamour","druid_dreams","paladin_glory","warlock_celestial"]},
+{l:"D",text:"Utility - Teleportation, Informationen sammeln, Probleme loesen",tags:["wizard","warlock","bard","artificer"],stags:["wizard_conjuration","wizard_divination","warlock_goo","bard_lore","artificer_battlesmith"]},
+{l:"E",text:"Einen einzelnen vernichtenden Fluch oder Angriff",tags:["warlock","paladin","cleric"],stags:["warlock_fiend","warlock_hexblade","paladin_vengeance","cleric_light"]}
+]},
+{id:13,cat:"Ressourcen",text:"Wie moechtest du deine Ressourcen verwalten?",opts:[
+{l:"A",text:"Gar keine - ich will kaempfen ohne Buchhaltung",tags:["barbarian","fighter","monk"],stags:["barbarian_berserker","barbarian_totem","fighter_champion","monk_openhand"]},
+{l:"B",text:"Wenige aber sehr impactvolle Ressourcen pro Kampf",tags:["paladin","warlock","ranger"],stags:["paladin_vengeance","paladin_devotion","warlock_fiend","warlock_goo","warlock_hexblade","ranger_gloom"]},
+{l:"C",text:"Einen grossen Pool strategisch ueber den ganzen Tag einteilen",tags:["wizard","sorcerer","cleric","druid"],stags:["wizard_evocation","sorcerer_draconic","cleric_life","druid_land"]},
+{l:"D",text:"Ressourcen die sich bei kurzen Pausen vollstaendig regenerieren",tags:["warlock","monk","fighter"],stags:["warlock_fiend","warlock_goo","warlock_hexblade","warlock_celestial","monk_shadow","fighter_eldritchknight"]},
+{l:"E",text:"Taeglich vorbereiten und perfekt an die Situation anpassen",tags:["wizard","cleric","druid","artificer"],stags:["wizard_divination","wizard_conjuration","cleric_life","druid_land","artificer_armorer","artificer_battlesmith"]}
+]},
+{id:14,cat:"Gruppenrolle",text:"Was soll dein Charakter in der Gruppe hauptsaechlich sein?",opts:[
+{l:"A",text:"Primaerer Schadensausteiler - ich mache den meisten Schaden",tags:["barbarian","fighter","rogue","ranger"],stags:["barbarian_berserker","fighter_champion","rogue_assassin","ranger_gloom","warlock_hexblade"]},
+{l:"B",text:"Tank - ich nehme Schaden fuer andere und halte Feinde beschaeftigt",tags:["fighter","paladin","barbarian"],stags:["fighter_cavalier","paladin_devotion","paladin_ancients","barbarian_totem","barbarian_ancestral"]},
+{l:"C",text:"Kontrolleur - ich entscheide wann und wie Gegner handeln koennen",tags:["wizard","sorcerer","druid","bard"],stags:["wizard_divination","wizard_evocation","sorcerer_draconic","druid_land","bard_lore","warlock_archfey"]},
+{l:"D",text:"Support/Heiler - ich halte die Gruppe am Laufen",tags:["cleric","bard","druid","paladin"],stags:["cleric_life","cleric_grave","bard_glamour","druid_dreams","paladin_glory","warlock_celestial"]},
+{l:"E",text:"Allrounder - ich fuelle jede Luecke die die Gruppe braucht",tags:["bard","artificer","ranger","rogue"],stags:["bard_lore","artificer_armorer","artificer_battlesmith","ranger_hunter","rogue_arcane"]}
+]},
+{id:15,cat:"Komplexitaet",text:"Wie komplex darf dein Charakter sein?",opts:[
+{l:"A",text:"So simpel wie moeglich - kaempfen ohne nachzudenken",tags:["barbarian","fighter"],stags:["barbarian_berserker","barbarian_totem","fighter_champion"]},
+{l:"B",text:"Mittel - ein paar taktische Entscheidungen pro Runde sind okay",tags:["paladin","ranger","cleric","rogue","monk"],stags:["paladin_devotion","ranger_hunter","cleric_life","rogue_thief","monk_openhand"]},
+{l:"C",text:"Komplex - viele Optionen und Synergien entdecken",tags:["wizard","sorcerer","druid","bard","artificer"],stags:["wizard_evocation","sorcerer_draconic","sorcerer_shadow","druid_land","bard_lore","artificer_battlesmith"]},
+{l:"D",text:"Sehr komplex - je mehr Mechaniken und Tiefe desto besser",tags:["wizard","warlock","sorcerer","artificer"],stags:["wizard_divination","wizard_conjuration","warlock_goo","warlock_hexblade","sorcerer_shadow","artificer_battlesmith"]}
+]},
+{id:16,cat:"Unterklasse",text:"Welches Konzept reizt dich am meisten?",opts:[
+{l:"A",text:"Noch haerterer Kampfstil - mehr Angriffe, mehr kritische Treffer",tags:["fighter","barbarian","ranger"],stags:["fighter_champion","fighter_battlemaster","barbarian_berserker","ranger_gloom","monk_kensei"]},
+{l:"B",text:"Magie zusaetzlich zu Kampffaehigkeiten kombinieren",tags:["paladin","ranger","fighter","artificer"],stags:["paladin_vengeance","paladin_devotion","ranger_gloom","fighter_eldritchknight","artificer_armorer"]},
+{l:"C",text:"Verbindung zu einer uebernatuerlichen, goettlichen oder kosmischen Macht",tags:["warlock","cleric","paladin","druid"],stags:["warlock_goo","warlock_fiend","warlock_celestial","cleric_light","paladin_devotion","druid_shepherd"]},
+{l:"D",text:"Stealth, Praezision und Schaden aus dem Schatten",tags:["rogue","ranger","monk"],stags:["rogue_assassin","rogue_scout","ranger_gloom","monk_shadow"]},
+{l:"E",text:"Auren und Buffs die die ganze Gruppe dauerhaft staerken",tags:["paladin","bard","cleric"],stags:["paladin_glory","paladin_ancients","bard_glamour","bard_lore","cleric_grave"]},
+{l:"F",text:"Tierkompagnon, Beschwoerungen oder verwandelte Form",tags:["druid","ranger","wizard"],stags:["druid_moon","druid_shepherd","ranger_beast","wizard_conjuration"]}
+]},
+{id:17,cat:"Unterklasse",text:"Was soll deine einzigartige Spezialfaehigkeit sein?",opts:[
+{l:"A",text:"Unfassbarer Burst-Schaden in einem einzigen Moment",tags:["paladin","rogue","barbarian"],stags:["paladin_vengeance","rogue_assassin","barbarian_berserker","barbarian_zealot"]},
+{l:"B",text:"Utility die kein anderer kann - Vielseitigkeit und einzigartige Tricks",tags:["wizard","bard","artificer","rogue"],stags:["wizard_divination","bard_lore","artificer_battlesmith","rogue_arcane","rogue_inquisitive"]},
+{l:"C",text:"Praktisch unzerstoerbar - extrem schwer zu toeten",tags:["barbarian","fighter","paladin"],stags:["barbarian_totem","barbarian_ancestral","fighter_cavalier","paladin_ancients"]},
+{l:"D",text:"Kaempfe durch Kontrolle entscheiden ohne viel Direktschaden",tags:["wizard","sorcerer","druid","bard"],stags:["wizard_divination","sorcerer_draconic","druid_land","bard_lore","warlock_archfey"]},
+{l:"E",text:"Bester Kundschafter und Ueberlebenskuenstler ausserhalb des Kampfes",tags:["ranger","rogue","druid"],stags:["ranger_hunter","ranger_gloom","rogue_scout","rogue_thief","druid_land"]}
+]},
+{id:18,cat:"Kampfstil",text:"Was ist dein bevorzugter Angriffsstil?",opts:[
+{l:"A",text:"Nahkampf - Klinge, Axt oder Faeuste direkt in den Feind",tags:["fighter","barbarian","paladin","monk"],stags:["fighter_champion","fighter_battlemaster","barbarian_berserker","paladin_vengeance","monk_kensei","monk_openhand","warlock_hexblade"]},
+{l:"B",text:"Fernkampf - Bogen oder Armbrustbolzen aus sicherer Distanz",tags:["ranger","fighter","rogue"],stags:["ranger_gloom","ranger_hunter","fighter_champion","rogue_scout","monk_sunsoule"]},
+{l:"C",text:"Zaubern - Sprueche und magische Effekte aus der Distanz",tags:["wizard","sorcerer","warlock","cleric","druid","bard"],stags:["wizard_evocation","sorcerer_draconic","sorcerer_storm","warlock_fiend","warlock_goo","cleric_light","druid_land","bard_lore"]},
+{l:"D",text:"Gemischt - ich wechsle je nach Situation zwischen Nah und Fern",tags:["paladin","ranger","artificer","bard"],stags:["paladin_devotion","ranger_hunter","artificer_armorer","bard_valor","bard_swords","fighter_eldritchknight"]}
+]},
+{id:19,cat:"Kampfstil",text:"Was ist dir bei Schaden wichtiger?",opts:[
+{l:"A",text:"Ein einzelnes Ziel so schnell wie moeglich vernichten - maximaler Fokusschaden",tags:["rogue","warlock","ranger","paladin"],stags:["rogue_assassin","warlock_hexblade","warlock_fiend","ranger_gloom","paladin_vengeance","barbarian_berserker"]},
+{l:"B",text:"Viele Gegner gleichzeitig treffen - Flaechenschaden",tags:["wizard","sorcerer","druid","cleric"],stags:["wizard_evocation","sorcerer_draconic","sorcerer_storm","druid_land","cleric_light"]},
+{l:"C",text:"Konstanter zuverlaessiger Schaden ueber viele Runden",tags:["fighter","barbarian","ranger","monk"],stags:["fighter_champion","fighter_battlemaster","barbarian_totem","ranger_hunter","monk_kensei"]},
+{l:"D",text:"Schaden ist mir weniger wichtig - ich will kontrollieren oder supporten",tags:["bard","cleric","druid","paladin"],stags:["bard_lore","bard_glamour","cleric_life","cleric_grave","druid_dreams","paladin_glory","warlock_archfey","warlock_celestial"]}
+]},
+{id:20,cat:"Kampfstil",text:"Wie spielst du am liebsten in Bezug auf Begleiter?",opts:[
+{l:"A",text:"Ich bin alleine stark - ich brauche niemanden um effektiv zu sein",tags:["barbarian","rogue","warlock","monk"],stags:["barbarian_berserker","rogue_assassin","rogue_swashbuckler","warlock_hexblade","warlock_fiend","monk_openhand"]},
+{l:"B",text:"Ich habe einen treuen Begleiter der neben mir kaempft",tags:["ranger","druid","artificer"],stags:["ranger_beast","druid_shepherd","artificer_battlesmith"]},
+{l:"C",text:"Ich mache meine Verbuendeten staerker - mein Beitrag zeigt sich in ihrer Leistung",tags:["bard","cleric","paladin","druid"],stags:["bard_glamour","bard_lore","cleric_life","paladin_glory","paladin_ancients","druid_dreams","warlock_celestial"]},
+{l:"D",text:"Ich kontrolliere Feinde damit meine Verbuendeten ungehindert kaempfen koennen",tags:["wizard","sorcerer","druid","bard"],stags:["wizard_divination","sorcerer_draconic","druid_land","bard_lore","warlock_archfey"]},
+{l:"E",text:"Ich bin der Anker - meine Verbuendeten kaempfen sicher weil ich die Front halte",tags:["fighter","paladin","barbarian"],stags:["fighter_cavalier","paladin_devotion","paladin_ancients","barbarian_ancestral","barbarian_totem"]}
+]}
+];
+
+var CD={
+fighter:{n:"Kaempfer",ic:"",sub:"Fighter",role:"Tank / Schaden",rb:{tank:85,damage:70,control:20,support:15,utility:30},cx:2,rr:"Mensch (Variant)",rrr:"Talent bei Level 1 z.B. Stangenwaffen-Meister oder Waechter",races:["Zwerg (Berg)","Half-Orc"],desc:"Der zuverlaessigste Kaempfer im Spiel. Konstanter Schaden, hohe Ruestung, viele Trefferpunkte. Kein Ressourcenproblem.",str:"Konstanter Schaden, hoechste Ruestungsoptionen, Kraftstoss fuer Burst",wk:"Wenig Nuetzlichkeit ausserhalb des Kampfes",ps:["Stehe vorne und halte Gegner beschaeftigt","Kraftstoss einmal pro Kampf fuer einen explosiven Moment","Extraangriff ab Level 5 ist ein riesiger Sprung"],
+subs:[
+{key:"fighter_champion",n:"Champion",src:"PHB",d:"Simpelste Unterklasse. Kritische Trefferzone auf 19-20. Perfekt fuer Einsteiger.",r:"Schaden"},
+{key:"fighter_battlemaster",n:"Battle Master",src:"PHB",d:"Taktischer Kaempfer mit Ueberlegenheitswuerfeln und Kampfmanoevern.",r:"Schaden/Kontrolle"},
+{key:"fighter_eldritchknight",n:"Eldritch Knight",src:"PHB",d:"Kombiniert Kampf mit Magierzaubern. Gut fuer Spieler die Magie UND Kampf wollen.",r:"Schaden/Magie"},
+{key:"fighter_samurai",n:"Samurai",src:"Xanathar",d:"Bonus-Vorteil auf Angriffe, extra Reaktion, Willenskraft-Faehigkeiten.",r:"Schaden"},
+{key:"fighter_cavalier",n:"Cavalier",src:"Xanathar",d:"Spezialist fuer den Schutz von Verbuendeten. Unbewegbarer Tank.",r:"Tank"}
+]},
+barbarian:{n:"Barbar",ic:"",sub:"Barbarian",role:"Tank / Schaden",rb:{tank:80,damage:85,control:10,support:5,utility:15},cx:1,rr:"Half-Orc",rrr:"Unerschuetterliche Ausdauer verhindert K.O. einmal pro Rast, Wilde Angriffe erhoehen Crit-Schaden",races:["Mensch","Zwerg (Berg)"],desc:"Rein, draufhauen, nicht sterben. Der einfachste Charakter im Spiel. Raserei aktivieren und kaempfen.",str:"Meiste Trefferpunkte aller Klassen, Schadensresistenz in der Raserei",wk:"Keine Magie, Raserei in schwerer Ruestung nicht optimal",ps:["Raserei jede Runde aktivieren - halber Schaden von physischen Angriffen","Ruecksichtsloser Angriff fuer Vorteil","Nahkampf-fokussiert"],
+subs:[
+{key:"barbarian_totem",n:"Path of the Totem Warrior",src:"PHB",d:"Baeren-Totem = nahezu unzerstoerbar in der Raserei. Staerkste defensive Option.",r:"Tank"},
+{key:"barbarian_berserker",n:"Path of the Berserker",src:"PHB",d:"Einfachste Option. Raserei gibt Bonusaktion-Angriff mit Erschoepfung als Nachteil.",r:"Schaden"},
+{key:"barbarian_zealot",n:"Path of the Zealot",src:"Xanathar",d:"Goettlich aufgeladener Barbar - kann kaum sterben.",r:"Schaden/Tank"},
+{key:"barbarian_ancestral",n:"Path of the Ancestral Guardian",src:"Xanathar",d:"Schuetzt Verbuendete durch Geister-Ahnen. Einzigartiger Support-Barbar.",r:"Tank/Support"}
+]},
+paladin:{n:"Paladin",ic:"",sub:"Paladin",role:"Tank / Support / Burst",rb:{tank:75,damage:65,control:30,support:60,utility:40},cx:3,rr:"Halbelf",rrr:"+2 Charisma perfekt fuer Gruppen-Aura, extra Fertigkeitskenntnisse",races:["Mensch","Tiefling"],desc:"Der vielseitigste Frontline-Charakter. Kaempft stark, heilt, staerkt die Gruppe durch seine Aura und macht explosive Burst-Schaden.",str:"Gruppen-Aura +Charisma auf alle Rettungswuerfe, Goettliche Vergeltung nach Treffer entscheiden",wk:"Begrenzte Zauberplaetze, verliert Staerke bei sehr langen Kampftagen",ps:["Goettliche Vergeltung NACH dem Trefferwuerfel entscheiden - kein Risiko!","Schutzaura: immer nah bei der Gruppe bleiben","Handauflegen als Bonusaktion fuer Notfall-Heilung"],
+subs:[
+{key:"paladin_devotion",n:"Oath of Devotion",src:"PHB",d:"Klassischer heiliger Krieger. Geweihte Waffe und Untote vertreiben. Einsteigerfreundlichste Option.",r:"Tank/Support"},
+{key:"paladin_vengeance",n:"Oath of Vengeance",src:"PHB",d:"Offensivste Unterklasse. Geluebde der Feindschaft gibt Vorteil auf einen Feind.",r:"Schaden"},
+{key:"paladin_ancients",n:"Oath of the Ancients",src:"PHB",d:"Natur-Paladin. Aura des Schutzes gegen Magie. Sehr solide.",r:"Tank/Support"},
+{key:"paladin_glory",n:"Oath of Glory",src:"Xanathar",d:"Support-fokussiert. Inspiriert Verbuendete aktiv, Aura der Inspiration.",r:"Support"},
+{key:"paladin_oathbreaker",n:"Oathbreaker",src:"DMG",d:"Gefallener Paladin mit dunklen Kraeften. Mit DM-Erlaubnis.",r:"Schaden/Dunkel"}
+]},
+rogue:{n:"Schurke",ic:"",sub:"Rogue",role:"Burst-Schaden / Nuetzlichkeit",rb:{tank:15,damage:80,control:25,support:20,utility:85},cx:3,rr:"Halbling (Leichtfuss)",rrr:"Glueck wuerfelt Patzer neu - kombiniert mit Hinterhaeltigem Angriff enorm stark",races:["Elf (Wald)","Mensch"],desc:"Koenig des Burst-Schadens und der Heimlichkeit. Hinterhaeltiger Angriff waechst massiv mit jedem Level.",str:"Hoechster Einzel-Burst-Schaden, beste Fertigkeiten, flexible Bonusaktionen",wk:"Sehr fragil, verliert Staerke ohne gutes Setup",ps:["Immer Hinterhaeltigen Angriff sichern - Verbuendeter in 1.5m reicht","Schlauen Kampf jede Runde nutzen: Verstecken, Sprint oder Ausweichen","Ueberraschungsrunde = automatischer Crit mit Attentaeter-Faehigkeit"],
+subs:[
+{key:"rogue_assassin",n:"Assassin",src:"PHB",d:"Hoechster Burst-Schaden in Runde 1. Ueberraschungsrunde Treffer = automatischer kritischer Treffer.",r:"Burst-Schaden"},
+{key:"rogue_thief",n:"Thief",src:"PHB",d:"Einfachste Option. Flinke Haende fuer schnelle Bonusaktionen. Beste Nuetzlichkeit.",r:"Nuetzlichkeit"},
+{key:"rogue_arcane",n:"Arcane Trickster",src:"PHB",d:"Magierzauber zusaetzlich zu Schurken-Faehigkeiten.",r:"Nuetzlichkeit/Magie"},
+{key:"rogue_inquisitive",n:"Inquisitive",src:"Xanathar",d:"Detektiv-Schurke. Hinterhaeltiger Angriff ohne Vorteil durch aufschlussreichen Kampf.",r:"Nuetzlichkeit/Sozial"},
+{key:"rogue_scout",n:"Scout",src:"Xanathar",d:"Kundschafter der immer zuerst handelt. Reaktives Ausweichen.",r:"Schaden/Nuetzlichkeit"},
+{key:"rogue_swashbuckler",n:"Swashbuckler",src:"Xanathar",d:"Duellant. Hinterhaeltiger Angriff im Einzelkampf ohne Verbuendeten noetig.",r:"Schaden/Sozial"}
+]},
+ranger:{n:"Waldlaeufer",ic:"",sub:"Ranger",role:"Schaden / Nuetzlichkeit",rb:{tank:30,damage:70,control:35,support:30,utility:70},cx:3,rr:"Elf (Wald)",rrr:"Extra Bewegung, Schleichen in Waeldern, Bogenkenntnisse und Dunkelsicht",races:["Halbelf","Mensch"],desc:"Solider Schaden und hervorragende Nuetzlichkeit. Duesterjaaeger stark in Runde 1, Jaegersmal konstanten Bonusschaden.",str:"Stark in Runde 1, hervorragend beim Schleichen, Jaegersmal fuer konstanten Schaden",wk:"Faellt nach Runde 1 deutlich ab, Zauberliste begrenzt",ps:["Jaegersmal frueh setzen und auf demselben Ziel lassen","Runde 1: alle Angriffe auf ein Ziel - Fokusfeuer!","Fernkampf empfohlen - aus sicherer Distanz operieren"],
+subs:[
+{key:"ranger_gloom",n:"Gloom Stalker",src:"Xanathar",d:"Extraangriff in Runde 1, Dunkelheitsvorteil. Staerkste Runde-1-Klasse im ganzen Spiel.",r:"Burst-Schaden"},
+{key:"ranger_hunter",n:"Hunter",src:"PHB",d:"Vielseitigste und einsteigerfreundlichste Option. Kolossustoeter fuer konstanten Bonusschaden.",r:"Schaden"},
+{key:"ranger_beast",n:"Beast Master",src:"PHB",d:"Tierkompagnon kaempft neben dir. Komplex aber einzigartig.",r:"Schaden/Begleiter"},
+{key:"ranger_monster",n:"Monster Slayer",src:"Xanathar",d:"Spezialisiert auf Monster und Uebernatuerliches.",r:"Nuetzlichkeit/Schaden"},
+{key:"ranger_horizon",n:"Horizon Walker",src:"Xanathar",d:"Planarer Krieger mit teleportationsaehnlichen Faehigkeiten.",r:"Schaden/Nuetzlichkeit"}
+]},
+wizard:{n:"Magier",ic:"",sub:"Wizard",role:"Kontrolleur / Schaden",rb:{tank:5,damage:75,control:95,support:40,utility:90},cx:5,rr:"Hochelf",rrr:"Gratis Magier-Zaubertrick, Elfengenauigkeit mit Vorteil sehr stark",races:["Gnome (Fels)","Mensch"],desc:"Staerkste Zauberliste im Spiel, enormes Nutzen und Kontrolle. Braucht taktisches Denken. Nur empfohlen wenn du Komplexitaet liebst.",str:"Groesste Zauberliste, kann fast jedes Problem loesen",wk:"Wenig Trefferpunkte, sehr komplex, bei leeren Zauberplaetzen sehr schwach",ps:["Taeglich Zauber vorbereiten und an die Situation anpassen","Konzentrationszauber zuerst - Hypnotisches Muster oder Verlangsamung","Immer fernab der Front bleiben"],
+subs:[
+{key:"wizard_evocation",n:"School of Evocation",src:"PHB",d:"Schadenszauberer. Geformte Zauber schliesst Verbuendete aus Flaechenzaubern aus. Einsteigerfreundlichste Option.",r:"Schaden"},
+{key:"wizard_divination",n:"School of Divination",src:"PHB",d:"Vorhersage: taeglich 2W20 wuerfeln und fuer beliebige Wuerfe einsetzen. Enorm maechtig.",r:"Kontrolle/Nuetzlichkeit"},
+{key:"wizard_conjuration",n:"School of Conjuration",src:"PHB",d:"Beschwoert Kreaturen und Objekte. Gutartige Versetzung fuer Teleportation.",r:"Nuetzlichkeit/Beschwoerung"},
+{key:"wizard_abjuration",n:"School of Abjuration",src:"PHB",d:"Schutzmagie mit Arkan-Schild als Trefferpunkt-Puffer.",r:"Tank/Support"},
+{key:"wizard_bladesinger",n:"Bladesinger",src:"Xanathar",d:"Kampfmagier der Nahkampf mit Zaubern kombiniert.",r:"Schaden/Kampf"},
+{key:"wizard_warmagic",n:"War Magic",src:"Xanathar",d:"Mischt Kampf und Zauberei. Arkane Ablenkung fuer bessere Rettungswuerfe.",r:"Schaden/Defensiv"}
+]},
+sorcerer:{n:"Zauberer",ic:"",sub:"Sorcerer",role:"Schaden / Kontrolleur",rb:{tank:15,damage:80,control:70,support:30,utility:50},cx:4,rr:"Tiefling",rrr:"+Charisma, Hoellische Vergeltung als starke Reaktion",races:["Drachengeboren","Halbelf"],desc:"Magie aus dem Blut - keine Vorbereitung noetig, Metamagie macht Zauber flexibler. Einfacher als Magier, trotzdem sehr maechtig.",str:"Metamagie fuer flexible Zauberei, keine taegliche Vorbereitung",wk:"Weniger Zauber bekannt als Magier, Zauberkraftpunkte gut verwalten",ps:["Metamagie strategisch einsetzen - Zwillinge fuer Doppel-Staerkung","Zauberkraftpunkte als Ersatz-Zauberplaetze sparen","Feste Zauberliste - bei Stufenaufstiegen gut ueberlegen"],
+subs:[
+{key:"sorcerer_shadow",n:"Shadow Magic",src:"Xanathar",d:"Dunkle Magie aus den Schatten. Hund des boesen Omens als Begleiter. Thematisch sehr einzigartig.",r:"Schaden/Dunkel"},
+{key:"sorcerer_draconic",n:"Draconic Bloodline",src:"PHB",d:"Einsteigerfreundlichste Option. Bonus-Trefferpunkte und natuerliche Ruestung.",r:"Schaden"},
+{key:"sorcerer_divine",n:"Divine Soul",src:"Xanathar",d:"Zugang zur Kleriker-Zauberliste zusaetzlich. Bester Hybrid aus Heiler und Zauberer.",r:"Schaden/Heiler"},
+{key:"sorcerer_wild",n:"Wild Magic",src:"PHB",d:"Chaotische zufaellige Effekte. Sehr spassig aber unvorhersehbar.",r:"Schaden/Chaos"},
+{key:"sorcerer_storm",n:"Storm Sorcery",src:"Xanathar",d:"Sturmmagie mit Mobilitaet. Nach jedem Zauber 3 Meter Teleportation.",r:"Schaden/Mobilitaet"}
+]},
+warlock:{n:"Hexenmeister",ic:"",sub:"Warlock",role:"Schaden / Nuetzlichkeit",rb:{tank:20,damage:65,control:45,support:25,utility:60},cx:3,rr:"Tiefling",rrr:"+Charisma, thematisch perfekt fuer dunklen Pakt, Dunkelheitszauber fuer Kampfvorteil",races:["Halbelf","Drow"],desc:"Pakt mit einer maechtigen Wesenheit. Wenige aber starke Zauberplaetze die bei kurzer Rast regenerieren. Schaurlicher Schlag als Basis-Angriff.",str:"Zauberplaetze regenerieren bei kurzer Rast, thematisch sehr stark",wk:"Nur 2 Zauberplaetze bis Stufe 10, sehr abhaengig vom Schaurlichen Schlag",ps:["Schaurlicher Schlag + Qualvolle Explosion = zuverlaessiger Schaden ohne Plaetze","Zauberplaetze fuer Verhexung und starke Zauber sparen","Kurze Rast wann immer moeglich - Plaetze regenerieren vollstaendig"],
+subs:[
+{key:"warlock_goo",n:"The Great Old One",src:"PHB",d:"Kosmische Macht mit Gedankenleser-Faehigkeiten. Perfekt fuer kosmischen Horror.",r:"Kontrolle/Dunkel"},
+{key:"warlock_fiend",n:"The Fiend",src:"PHB",d:"Staerkste Schadens-Option. Zeitweilige Trefferpunkte bei jedem Abschuss.",r:"Schaden"},
+{key:"warlock_hexblade",n:"The Hexblade",src:"Xanathar",d:"Nahkampf-Hexenmeister mit Charisma statt Staerke fuer Angriffe. Sehr starker Build.",r:"Nahkampf/Schaden"},
+{key:"warlock_archfey",n:"The Archfey",src:"PHB",d:"Feenmagie mit Bezauberung und Furcht. Soziale und Kontroll-fokussierte Option.",r:"Kontrolle/Sozial"},
+{key:"warlock_celestial",n:"The Celestial",src:"Xanathar",d:"Heilender Hexenmeister mit Lichtmagie. Einziger Hexenmeister mit echter Heilfaehigkeit.",r:"Support/Heiler"}
+]},
+cleric:{n:"Kleriker",ic:"",sub:"Cleric",role:"Support / Heiler / Schaden",rb:{tank:45,damage:55,control:50,support:90,utility:65},cx:3,rr:"Zwerg (Huegel)",rrr:"Extra Trefferpunkte pro Stufe, Weisheitsbonus, Resistenz gegen Gift",races:["Mensch","Halbelf"],desc:"Zuverlaessigster Support im Spiel. Bereitet Zauber taeglich vor - perfekte Anpassung. Kann heilen, kaempfen und kontrollieren.",str:"Bestes Heilen im Spiel, flexible taegliche Vorbereitung",wk:"Mittelmaeassiger Direktschaden ohne Schaden-Unterklasse, oft reaktiv",ps:["Heilendes Wort (Bonusaktion) statt Wunden heilen - Aktion bleibt frei","Taeglich Zauber anpassen - heute Heilung, morgen Schaden?","Heilige Flamme als Zaubertrick wenn keine Heilung noetig"],
+subs:[
+{key:"cleric_life",n:"Life Domain",src:"PHB",d:"Bestes Heilen im gesamten Spiel. Juenger des Lebens macht alle Heilzauber staerker.",r:"Heiler"},
+{key:"cleric_light",n:"Light Domain",src:"PHB",d:"Schaden + Kontrolle mit Strahlungsausbruch und Feuerball. Offensivster Kleriker.",r:"Schaden"},
+{key:"cleric_war",n:"War Domain",src:"PHB",d:"Kampfkleriker mit Extraangriff und Goettlichem Hieb. Heilen UND kaempfen.",r:"Kampf/Support"},
+{key:"cleric_knowledge",n:"Knowledge Domain",src:"PHB",d:"Fertigkeits-Meisterschaft und Gedankenlesen. Beste soziale Option.",r:"Nuetzlichkeit/Sozial"},
+{key:"cleric_grave",n:"Grave Domain",src:"Xanathar",d:"Markiert Feinde fuer kritische Treffer der Verbuendeten. Einzigartiger Support.",r:"Support/Dunkel"}
+]},
+druid:{n:"Druide",ic:"",sub:"Druid",role:"Kontrolleur / Support / Tank",rb:{tank:50,damage:45,control:80,support:70,utility:75},cx:3,rr:"Waldelfe",rrr:"Weisheitsbonus, erhoehte Bewegungsrate, Schleichen in natuerlichen Umgebungen",races:["Halbling","Mensch"],desc:"Flexibelster Charakter - kann tanken, heilen oder kontrollieren. Landkreis ist fuer Einsteiger ideal.",str:"Flexibelste Rolle im Spiel, starke Kontrollzauber wie Verstrickung und Dornenfeld",wk:"Wildgestalt erhoeht Komplexitaet massiv, schwache Ruestung ohne Wildgestalt",ps:["Heilendes Wort (Bonusaktion) - wichtigste Technik","Verstrickung in Runde 1 gegen Gruppen - haelt fest ohne Wiederholungs-Rettungswurf","Wildgestalt nur als Notfall-Tank, nicht als Opener"],
+subs:[
+{key:"druid_land",n:"Circle of the Land",src:"PHB",d:"Bleibt in Zauberform. Extra Bereichszauber je nach Terrain. Einsteigerfreundlichste Option.",r:"Kontrolleur/Support"},
+{key:"druid_moon",n:"Circle of the Moon",src:"PHB",d:"Wildgestalt in starke Kampftiere. Guter Tank aber komplex.",r:"Tank"},
+{key:"druid_dreams",n:"Circle of Dreams",src:"Xanathar",d:"Support durch feenhafte Kraefte. Balsam des Sommerhofs fuer flexible Heilung.",r:"Support/Heiler"},
+{key:"druid_shepherd",n:"Circle of the Shepherd",src:"Xanathar",d:"Beschwoerung-Spezialist. Tiergefaehrten werden massiv staerker.",r:"Beschwoerung/Support"},
+{key:"druid_spores",n:"Circle of Spores",src:"Xanathar",d:"Nekromantischer Natur-Druid. Dunkle Thematik, passiv Schaden durch Sporen.",r:"Schaden/Dunkel"}
+]},
+bard:{n:"Barde",ic:"",sub:"Bard",role:"Support / Kontrolleur / Alleskoenner",rb:{tank:15,damage:50,control:65,support:80,utility:95},cx:4,rr:"Halbelf",rrr:"+2 Charisma, extra Fertigkeitskenntnisse, Feenabstammung",races:["Tiefling","Mensch"],desc:"Sozialer Alleskoenner mit besten Fertigkeiten. Bardische Inspiration hilft der Gruppe jede Runde.",str:"Beste Fertigkeitsauswahl im Spiel, Bardische Inspiration fuer Verbuendete",wk:"Kein klarer primaerer Kampfbeitrag ohne Kampf-Unterklasse",ps:["Bardische Inspiration jede Runde vergeben - nie verschwenden","Konzentration auf Hypnotisches Muster oder Verlangsamung","Soziale Begegnungen - du bist der natuerliche Sprecher"],
+subs:[
+{key:"bard_lore",n:"College of Lore",src:"PHB",d:"Mehr Zauber aus anderen Klassen durch Magische Geheimnisse. Einsteigerfreundlich.",r:"Nuetzlichkeit/Kontrolleur"},
+{key:"bard_valor",n:"College of Valor",src:"PHB",d:"Kampfbarde mit Extraangriff und Kampfinspiration.",r:"Kampf/Support"},
+{key:"bard_swords",n:"College of Swords",src:"Xanathar",d:"Duellant-Barde mit Klingen-Flourish. Bester Schaden unter den Barden.",r:"Schaden"},
+{key:"bard_whispers",n:"College of Whispers",src:"Xanathar",d:"Dunkler manipulativer Barde. Psychische Klingen fuer Bonusschaden.",r:"Schaden/Dunkel"},
+{key:"bard_glamour",n:"College of Glamour",src:"Xanathar",d:"Feenhafter Barde. Mantel der Inspiration gibt Gruppe Bonusbewegung und zeitweilige Trefferpunkte.",r:"Support"}
+]},
+monk:{n:"Moenrch",ic:"",sub:"Monk",role:"Plaenkler / Kontrolle",rb:{tank:25,damage:60,control:40,support:20,utility:65},cx:3,rr:"Elf (Wald)",rrr:"Extra Bewegung stackt mit ungeruesteter Bewegung, Weisheit fuer Ruestungsklasse und Ki",races:["Halbling","Mensch"],desc:"Schnellster Charakter am Tisch. Ki-Punkte fuer extra Angriffe, Betaeubungen und spezielle Faehigkeiten.",str:"Hoechste Mobilitaet, Betaeubender Schlag kann Gegner ausschalten",wk:"Wenig Trefferpunkte, braucht gute Positionierung, Ki nur bei kurzer Rast",ps:["Betaeubender Schlag gegen starke Einzelgegner","Bluetenregen fuer Bonusangriffe mit Ki","Niemals in Ruestung - Ungeruestete Verteidigung ist besser"],
+subs:[
+{key:"monk_openhand",n:"Way of the Open Hand",src:"PHB",d:"Einfachste Option. Technik wirft Gegner um, entzieht Reaktionen oder haelt sie fest.",r:"Kontrolle/Schaden"},
+{key:"monk_shadow",n:"Way of Shadow",src:"PHB",d:"Schatten-Moenrch mit Schleichen und Teleportation. Thematisch einzigartig.",r:"Schleichen/Schaden"},
+{key:"monk_drunken",n:"Way of the Drunken Master",src:"Xanathar",d:"Sehr mobiler und ausweichender Kampfstil. Extrem schwer zu treffen.",r:"Mobilitaet/Defensiv"},
+{key:"monk_kensei",n:"Way of the Kensei",src:"Xanathar",d:"Waffen-Moenrch. Kann Boegen nutzen. Besserer Schaden als andere Moenrche.",r:"Schaden"},
+{key:"monk_sunsoule",n:"Way of the Sun Soul",src:"Xanathar",d:"Fernkampf-Moenrch mit Energie-Projektilen. Einzige echte Fernkampf-Option.",r:"Fernkampf/Schaden"}
+]},
+artificer:{n:"Erfinder",ic:"",sub:"Artificer",role:"Support / Nuetzlichkeit / Alleskoenner",rb:{tank:35,damage:50,control:40,support:75,utility:95},cx:5,rr:"Gnome (Fels)",rrr:"+2 Intelligenz, Gnomische Schlauheit fuer Vorteil auf Rettungswuerfe gegen Magie",races:["Mensch","Zwerg (Berg)"],desc:"Vielseitigster Charakter - fuellt jede Luecke durch Einpraegungen. Schwach bei Stufe 1-2, kommt ab Stufe 3 richtig online.",str:"Gibt magische Gegenstaende an Verbuendete, extrem vielseitig",wk:"Sehr schwach bei Stufe 1-2, komplex durch Einpraegungsverwaltung",ps:["Einpraegungen taeglich anpassen - gib magische Gegenstaende an Verbuendete","Zaubervorbereitung taeglich ueberdenken","Kommt erst Stufe 3 online - bis dahin durchhalten"],
+subs:[
+{key:"artificer_armorer",n:"Armorer",src:"Tasha",d:"Magische Ruestung als Tank (Waechter) oder Plaenkler (Eindringling). Beste Kampf-Option.",r:"Tank/Schaden"},
+{key:"artificer_artillerist",n:"Artillerist",src:"Tasha",d:"Magische Kanone als Bonusaktion platzieren. Einfachste und schadenstaerkste Option.",r:"Schaden"},
+{key:"artificer_battlesmith",n:"Battle Smith",src:"Tasha",d:"Stahlverteidiger als Begleiter. Intelligenz statt Staerke. Komplex aber sehr stark.",r:"Schaden/Begleiter"},
+{key:"artificer_alchemist",n:"Alchemist",src:"Tasha",d:"Traenke und alchemische Effekte. Thematisch interessant aber mechanisch nicht die staerkste Wahl.",r:"Support"}
+]}
+};
+
+var CC={fighter:"#378ADD",barbarian:"#D85A30",paladin:"#9B59B6",rogue:"#1D9E75",ranger:"#639922",wizard:"#533AB7",sorcerer:"#BA7517",warlock:"#993556",cleric:"#c8a020",druid:"#2d8a2d",bard:"#D4537E",monk:"#1a8a8a",artificer:"#8a5a1a"};
+var RL=[{k:"tank",l:"Tank",i:"",c:"#4a90d9"},{k:"damage",l:"Schaden",i:"",c:"#d85a30"},{k:"control",l:"Kontrolle",i:"",c:"#9b59b6"},{k:"support",l:"Support",i:"",c:"#2d8a2d"},{k:"utility",l:"Utility",i:"",c:"#c8a020"}];
+
+var ans={},cur=0;
+
+function sc(){
+  var cls={},sub={};
+  Object.keys(CD).forEach(function(k){cls[k]=0;});
+  Object.values(ans).forEach(function(a){
+    a.tags.forEach(function(t){if(cls[t]!==undefined)cls[t]++;});
+    a.stags.forEach(function(s){sub[s]=(sub[s]||0)+1;});
+  });
+  return {cls:cls,sub:sub};
+}
+
+function pips(n){
+  var h="";
+  for(var i=0;i<5;i++)h+='<div class="cxp'+(i<n?" on":"")+'"></div>';
+  return h;
+}
+
+function render(){
+  document.getElementById("app").innerHTML=cur<Q.length?bQ():bR();
+  bind();
+}
+
+function bQ(){
+  var q=Q[cur];
+  var pct=Math.round((cur/Q.length)*100);
+  var prev=ans[q.id];
+  var os="";
+  q.opts.forEach(function(o){
+    var sel=prev&&JSON.stringify(prev.tags)===JSON.stringify(o.tags)?" sel":"";
+    os+='<button class="opt'+sel+'" data-tags=\''+JSON.stringify(o.tags)+'\' data-stags=\''+JSON.stringify(o.stags)+'\' data-qid="'+q.id+'"><span class="ol">'+o.l+'</span><span>'+o.text+'</span></button>';
+  });
+  return '<div class="hdr"><span class="bdg">D&amp;D 5e</span><h1>Charakterfindung</h1><p>Beantworte 20 Fragen und finde deine perfekte Klasse &amp; Unterklasse</p></div>'+
+    '<div class="pw"><div class="pf" style="width:'+pct+'%"></div></div>'+
+    '<div class="card"><div class="qm">'+q.cat+' - Frage '+q.id+' von '+Q.length+'</div><div class="qt">'+q.text+'</div><div class="opts">'+os+'</div></div>'+
+    '<div class="nav"><button class="btn bg" id="bb"'+(cur===0?" disabled":"")+'>&#8592; Zurueck</button><span class="qc">'+(cur+1)+' / '+Q.length+'</span><button class="btn bs" id="bn"'+(!ans[q.id]?" disabled":"")+'>'+(cur===Q.length-1?"Ergebnis &#8594;":"Weiter &#8594;")+'</button></div>';
+}
+
+function bR(){
+  var s=sc();
+  var rc=Object.entries(s.cls).sort(function(a,b){return b[1]-a[1];});
+  var tk=rc[0][0];
+  var mx=rc[0][1];
+  var d=CD[tk];
+  var alts=rc.slice(1,3);
+  var ms=d.subs.map(function(sb){return Object.assign({},sb,{score:s.sub[sb.key]||0});});
+  var mxs=Math.max.apply(null,ms.map(function(x){return x.score;}));
+  if(mxs===0)mxs=1;
+  ms.sort(function(a,b){return b.score-a.score;});
+
+  var rg=RL.map(function(r){
+    return '<div class="rb"><div class="ric">'+r.i+'</div><div class="rnm">'+r.l+'</div><div class="rbw"><div class="rbf" style="width:'+d.rb[r.k]+'%;background:'+r.c+'"></div></div><div class="rvl">'+d.rb[r.k]+'%</div></div>';
+  }).join("");
+
+  var pshtml=d.ps.map(function(p){return '<div class="psi"><div class="psd"></div><span>'+p+'</span></div>';}).join("");
+
+  var sbhtml=ms.map(function(sb,i){
+    var bw=Math.round((sb.score/mxs)*100);
+    return '<div class="sbi'+(i===0?" top":"")+'"><div class="sbh"><span class="sbn">'+sb.n+'</span><span class="sbsrc">'+sb.src+'</span>'+(i===0?'<span class="sbbdg">Empfohlen</span>':'')+' <span class="sbrl">'+sb.r+'</span></div><div class="sbbw"><div class="sbbar" style="width:'+bw+'%"></div></div><div class="sbd">'+sb.d+'</div></div>';
+  }).join("");
+
+  var profhtml=rc.slice(0,8).map(function(x){
+    var pct=mx>0?Math.round((x[1]/mx)*100):0;
+    return '<div class="scr"><span class="scl">'+CD[x[0]].n+'</span><div class="sct"><div class="scb" style="width:'+pct+'%;background:'+CC[x[0]]+'"></div></div><span class="scv">'+x[1]+'</span></div>';
+  }).join("");
+
+  var althtml=alts.map(function(x){
+    return '<div class="alti"><strong>'+CD[x[0]].n+'</strong> - '+CD[x[0]].subs[0].n+' - '+CD[x[0]].role+'</div>';
+  }).join("");
+
+  return '<div class="hdr"><span class="bdg">Dein Ergebnis</span></div>'+
+    '<div class="card">'+
+    '<div class="rh"><div class="ri">'+d.ic+'</div><div class="rn">'+d.n+'</div><div class="rs">'+d.sub+' - '+d.role+'</div></div>'+
+    '<hr class="div">'+
+    '<div style="margin-bottom:16px"><div class="sl">Kampfrolle</div><div class="rg">'+rg+'</div></div>'+
+    '<div style="margin-bottom:16px"><div class="sl">Komplexitaet</div><div style="display:flex;align-items:center;gap:10px"><div class="cxr">'+pips(d.cx)+'</div><span style="font-size:13px;color:var(--txt2)">'+["","Sehr einfach","Einfach","Mittel","Komplex","Sehr komplex"][d.cx]+'</span></div></div>'+
+    '<hr class="div">'+
+    '<div style="margin-bottom:16px"><div class="sl">Beschreibung</div><div class="rd">'+d.desc+'</div></div>'+
+    '<div style="margin-bottom:16px"><div class="sl">Spielweise</div><div class="psb">'+pshtml+'</div></div>'+
+    '<div class="swg" style="margin-bottom:16px"><div class="swb str"><div class="swl">Staerken</div><p>'+d.str+'</p></div><div class="swb wk"><div class="swl">Schwaechen</div><p>'+d.wk+'</p></div></div>'+
+    '<hr class="div">'+
+    '<div style="margin-bottom:16px"><div class="sl">Unterklassen - Ranking basierend auf deinen Antworten</div>'+sbhtml+'</div>'+
+    '<div style="margin-bottom:16px"><div class="sl">Empfohlene Rasse</div><div class="ib"><div class="it">'+d.rr+'</div><div class="ir">'+d.rrr+'</div></div><div class="tgr">'+d.races.map(function(r){return '<span class="tg">'+r+'</span>';}).join("")+'</div></div>'+
+    '<hr class="div">'+
+    '<div style="margin-bottom:16px"><div class="sl">Dein Klassen-Profil</div>'+profhtml+'</div>'+
+    (alts.length?'<div class="altb"><div class="sl" style="margin-bottom:8px">Alternativ passend</div>'+althtml+'</div>':'')+
+    '</div>'+
+    '<button class="rstb" id="rst">&#8635; Neu starten</button>'+
+    '<div class="fn">D&amp;D 5e - PHB + Xanathar\'s Guide</div>';
+}
+
+function bind(){
+  document.querySelectorAll(".opt").forEach(function(btn){
+    btn.addEventListener("click",function(){
+      var qid=parseInt(btn.dataset.qid);
+      ans[qid]={tags:JSON.parse(btn.dataset.tags),stags:JSON.parse(btn.dataset.stags)};
+      document.querySelectorAll(".opt").forEach(function(b){b.classList.remove("sel");});
+      btn.classList.add("sel");
+      var n=document.getElementById("bn");
+      if(n)n.disabled=false;
+    });
+  });
+  var bb=document.getElementById("bb");
+  if(bb)bb.addEventListener("click",function(){if(cur>0){cur--;render();}});
+  var bn=document.getElementById("bn");
+  if(bn)bn.addEventListener("click",function(){
+    if(cur<Q.length-1){cur++;render();}
+    else{cur=Q.length;render();}
+  });
+  var rst=document.getElementById("rst");
+  if(rst)rst.addEventListener("click",function(){ans={};cur=0;render();});
+}
+
+render();
+</script>
+</body>
+</html>
